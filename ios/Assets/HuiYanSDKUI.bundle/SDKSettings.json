@@ -1,0 +1,23 @@
+{
+    "version": "1.0.0",
+    "sdk_settings":
+    {
+        "action+reflect_settings":
+        {
+            "app_id":"sdk_ios",
+            "timeout_countdown_ms":15000,
+            "bigface_ratio_threshold":0.8,
+            "check_eye_open":true,
+            "force_pose_check":false,
+            "action_frame_num":8,
+            "video_bitrate":2097152,
+            "video_iframeinterval":30,
+            "action_security_level":1,
+            "reflect_security_level":2,
+            "action_default_seq":[0],
+            "config_api_url":"https://sdk.faceid.qq.com/api/v1/reflect/getLiveType",
+            "result_api_url":"https://sdk.faceid.qq.com/api/v1/reflect/compare"
+        },
+        "need_network":true
+    }
+}

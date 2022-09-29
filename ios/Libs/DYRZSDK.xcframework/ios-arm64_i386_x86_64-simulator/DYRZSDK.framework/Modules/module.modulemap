@@ -1,0 +1,6 @@
+framework module DYRZSDK {
+  umbrella header "DYRZSDK-umbrella.h"
+
+  export *
+  module * { export * }
+}
