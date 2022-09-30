@@ -45,12 +45,10 @@ class _MyAppState extends State<MyApp> {
                   await FlutterFaceIdentification.faceIdentify(
                           mobile: '15851323272')
                       .then((value) {
-                    if (value) {
-                      print('认证成功！！！！');
-                      setState(() {
-                        _result = '认证成功！！！！';
-                      });
-                    }
+                    print('认证成功！ result = $value');
+                    setState(() {
+                      _result = '认证成功！！！！';
+                    });
                   }).onError((error, stackTrace) {
                     print('认证失败 error= $error');
                     setState(() {

@@ -24,7 +24,8 @@ class FlutterFaceIdentification {
   }
 
   ///开始实名认证
-  static Future<bool> faceIdentify({required String mobile}) async {
+  static Future<Map<String, dynamic>> faceIdentify(
+      {required String mobile}) async {
     ServerResponse response = await FaceApi.requestFaceClient(
       mobile: mobile,
       iosClientId: SDKDataCache().iosClientId,
@@ -39,7 +40,7 @@ class FlutterFaceIdentification {
     }
   }
 
-  static Future<bool> _openSdk(FaceIdentifyModel model) async {
+  static Future<Map<String, dynamic>> _openSdk(FaceIdentifyModel model) async {
     try {
       Map<dynamic, dynamic> result = await _methodChannel.invokeMethod(
           'realNameAuth', {
@@ -55,14 +56,14 @@ class FlutterFaceIdentification {
     }
   }
 
-  static Future<bool> _resultVerify({
+  static Future<Map<String, dynamic>> _resultVerify({
     FaceResultModel? resultModel,
     FaceIdentifyModel? identifyModel,
   }) async {
     ServerResponse response = await FaceApi.requestResultVerify(
         resultModel: resultModel, identifyModel: identifyModel);
     if (response.isSuccess()) {
-      return true;
+      return response.data;
     } else {
       return Future.error(response.message ?? '网络请求异常,请稍后操作');
     }
