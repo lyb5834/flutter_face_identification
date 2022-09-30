@@ -30,37 +30,20 @@ static id _instance;
     FlutterMethodChannel *channel = [FlutterMethodChannel methodChannelWithName:@"flutter_face_identification" binaryMessenger: [registrar messenger]];
     [registrar addMethodCallDelegate:instance channel: channel];
     
-//    [registrar addApplicationDelegate:instance];
+    [registrar addApplicationDelegate:instance];
 }
 
-- (BOOL)application:(UIApplication *)application
-    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  NSURL *url = (NSURL *)launchOptions[UIApplicationLaunchOptionsURLKey];
-  self.faceLink = [url absoluteString];
-  return YES;
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    self.faceLink = [url absoluteString];
+    
+    return YES;
 }
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
     self.faceLink = [url absoluteString];
-    // CA实名认证
-    [DYRZInterface handleAliPayAuthOpenURL:[NSURL URLWithString:self.faceLink] completion:^(BOOL success, NSError * _Nonnull error) {
-        if (success) {
-            NSLog(@"认证成功");
-        }
-    }];
     return YES;
-}
-
-- (BOOL)application:(UIApplication *)application
-    continueUserActivity:(NSUserActivity *)userActivity
-      restorationHandler:(void (^)(NSArray *_Nullable))restorationHandler {
-  if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-    self.faceLink = [userActivity.webpageURL absoluteString];
-    return YES;
-  }
-  return NO;
 }
 
 - (void)setFaceLink:(NSString *)faceLink
@@ -72,6 +55,13 @@ static id _instance;
     [self didChangeValueForKey:key];
     
     NSLog(@"openURL: %@",faceLink);
+    
+    // CA实名认证
+    [DYRZInterface handleAliPayAuthOpenURL:[NSURL URLWithString:faceLink] completion:^(BOOL success, NSError * _Nonnull error) {
+        if (success) {
+            NSLog(@"认证成功");
+        }
+    }];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result
