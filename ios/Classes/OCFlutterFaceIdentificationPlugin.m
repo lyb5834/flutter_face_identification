@@ -10,56 +10,68 @@
 #import "MBProgressHUD.h"
 
 @interface OCFlutterFaceIdentificationPlugin ()
-@property(nonatomic, copy) NSString *latestLink;
+@property(nonatomic, copy) NSString *faceLink;
 @end
 
 @implementation OCFlutterFaceIdentificationPlugin
 
+static id _instance;
+
++ (OCFlutterFaceIdentificationPlugin *)sharedInstance {
+  if (_instance == nil) {
+    _instance = [[OCFlutterFaceIdentificationPlugin alloc] init];
+  }
+  return _instance;
+}
 
 + (void)registerWithRegistrar:(nonnull NSObject<FlutterPluginRegistrar> *)registrar {
-    OCFlutterFaceIdentificationPlugin* instance = [[OCFlutterFaceIdentificationPlugin alloc] init];
+    OCFlutterFaceIdentificationPlugin* instance = [OCFlutterFaceIdentificationPlugin sharedInstance];
       
     FlutterMethodChannel *channel = [FlutterMethodChannel methodChannelWithName:@"flutter_face_identification" binaryMessenger: [registrar messenger]];
     [registrar addMethodCallDelegate:instance channel: channel];
     
-    [registrar addApplicationDelegate:instance];
+//    [registrar addApplicationDelegate:instance];
 }
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSURL *url = (NSURL *)launchOptions[UIApplicationLaunchOptionsURLKey];
-  self.latestLink = [url absoluteString];
+  self.faceLink = [url absoluteString];
   return YES;
 }
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
-  self.latestLink = [url absoluteString];
-  return YES;
+    self.faceLink = [url absoluteString];
+    // CA实名认证
+    [DYRZInterface handleAliPayAuthOpenURL:[NSURL URLWithString:self.faceLink] completion:^(BOOL success, NSError * _Nonnull error) {
+        if (success) {
+            NSLog(@"认证成功");
+        }
+    }];
+    return YES;
 }
 
 - (BOOL)application:(UIApplication *)application
     continueUserActivity:(NSUserActivity *)userActivity
       restorationHandler:(void (^)(NSArray *_Nullable))restorationHandler {
   if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-    self.latestLink = [userActivity.webpageURL absoluteString];
+    self.faceLink = [userActivity.webpageURL absoluteString];
     return YES;
   }
   return NO;
 }
 
-- (void)setLatestLink:(NSString *)latestLink
+- (void)setFaceLink:(NSString *)faceLink
 {
-    _latestLink = latestLink;
-    NSLog(@"openURL: %@",latestLink);
+    static NSString *key = @"faceLink";
     
-    // CA实名认证
-    [DYRZInterface handleAliPayAuthOpenURL:[NSURL URLWithString:latestLink] completion:^(BOOL success, NSError * _Nonnull error) {
-        if (success) {
-            NSLog(@"认证成功");
-        }
-    }];
+    [self willChangeValueForKey:key];
+    _faceLink = [faceLink copy];
+    [self didChangeValueForKey:key];
+    
+    NSLog(@"openURL: %@",faceLink);
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result
