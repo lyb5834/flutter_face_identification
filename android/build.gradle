@@ -48,7 +48,7 @@ android {
 dependencies {
     //api fileTree(include: ['*.jar'], dir: 'libs')
     //api fileTree(include: ['*.aar'], dir: 'libs')
-    implementation fileTree(include: ['*.jar', '*.aar'], dir: '')
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     compileOnly files('libs/caauth.aar')
     compileOnly files('libs/caauthui.aar')
     compileOnly files('libs/huiyansdk_android_1.0.7_release.aar')
