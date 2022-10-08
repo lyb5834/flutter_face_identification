@@ -16,6 +16,10 @@ buildscript {
 
 rootProject.allprojects {
     repositories {
+    flatDir {
+            dirs project(':flutter_face_identification').file('libs')
+        }
+    
         google()
         mavenCentral()
     }
@@ -46,12 +50,9 @@ android {
 }
 
 dependencies {
-    //api fileTree(include: ['*.jar'], dir: 'libs')
-    //api fileTree(include: ['*.aar'], dir: 'libs')
-    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
-    compileOnly files('libs/caauth.aar')
-    compileOnly files('libs/caauthui.aar')
-    compileOnly files('libs/huiyansdk_android_1.0.7_release.aar')
+    implementation(name: 'caauth', ext: 'aar')
+    implementation(name: 'caauthui', ext: 'aar')
+    implementation(name: 'huiyansdk_android_1.0.7_release', ext: 'aar')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
