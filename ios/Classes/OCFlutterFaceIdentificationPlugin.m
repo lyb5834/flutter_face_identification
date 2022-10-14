@@ -30,7 +30,7 @@ static id _instance;
     FlutterMethodChannel *channel = [FlutterMethodChannel methodChannelWithName:@"flutter_face_identification" binaryMessenger: [registrar messenger]];
     [registrar addMethodCallDelegate:instance channel: channel];
     
-    [registrar addApplicationDelegate:instance];
+//     [registrar addApplicationDelegate:instance];
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
